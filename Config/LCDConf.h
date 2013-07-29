@@ -37,7 +37,7 @@ Purpose     : Sample configuration file
 
 #define LCD_BITSPERPIXEL (8)
 
-#define LCD_CONTROLLER 1375
+//#define LCD_CONTROLLER 1375
 
 /*********************************************************************
 *
@@ -110,20 +110,7 @@ Purpose     : Sample configuration file
   #define LCD_WRITE_REGLH(Adr, d0, d1) LCD_WRITE_REG(Adr, ((d1)<<8) | (d0))
 #endif  
 
-#define LCD_INIT_CONTROLLER()                                                                    \
-        LCD_WRITE_REGLH(0x00>>1,LCD_REG0, LCD_REG1);                                             \
-        LCD_WRITE_REGLH(0x02>>1,LCD_REG2, LCD_REG3);                                             \
-        LCD_WRITE_REGLH(0x04>>1,LCD_REG4, LCD_REG5);                                             \
-        LCD_WRITE_REGLH(0x06>>1,LCD_REG6, LCD_REG7);                                             \
-        LCD_WRITE_REGLH(0x08>>1,LCD_REG8, LCD_REG9);                                             \
-        LCD_WRITE_REGLH(0x0a>>1,LCD_REGA, LCD_REGB);                                             \
-        LCD_WRITE_REGLH(0x0c>>1,LCD_REGC, LCD_REGD);                                             \
-        LCD_WRITE_REG  (0x0e>>1,0x00);                 /* 0, screen 2 start l*/                  \
-        LCD_WRITE_REG  (0x10>>1,0x00);                 /* screen 2 start h */                    \
-        LCD_WRITE_REGLH(0x12>>1,LCD_REG12, LCD_REG13); /* mem adr. offset, screen 1 vsize(lsb)*/ \
-        LCD_WRITE_REGLH(0x14>>1,LCD_REG14, 0);                                                   \
-        LCD_WRITE_REGLH(0x1a>>1,0, LCD_REG1B);                                                   \
-        LCD_WRITE_REGLH(0x1c>>1,LCD_REG1C, 0)
+
  
 #endif /* LCDCONF_H */
 

@@ -269,44 +269,7 @@ void LCD_SetClipRectMax(void) {
 *
 *       LCD_Init
 */
-int LCD_Init(void) {
-  int r = 0;
-  GUI_DEBUG_LOG("\nLCD_Init...");
-  LCD_SetClipRectMax();
-  r |= LCD_L0_Init();
-  #if GUI_NUM_LAYERS > 1
-    r |= LCD_L0_1_Init();
-  #endif
-  #if GUI_NUM_LAYERS > 2
-    r |= LCD_L0_2_Init();
-  #endif
-  #if GUI_NUM_LAYERS > 3
-    r |= LCD_L0_3_Init();
-  #endif
-  #if GUI_NUM_LAYERS > 4
-    r |= LCD_L0_4_Init();
-  #endif
-  LCD_InitLUT();
-  {
-  #if GUI_NUM_LAYERS > 1
-    int i;
-    for (i = GUI_NUM_LAYERS - 1; i >= 0; i--) {
-      GUI_SelectLayer(i);
-  #else
-    {
-  #endif
-      #if (GUI_DEFAULT_BKCOLOR != GUI_INVALID_COLOR)
-        /* Clear video memory */
-        LCD_SetDrawMode(GUI_DRAWMODE_REV);
-        LCD_FillRect(0,0, GUI_XMAX, GUI_YMAX);
-        LCD_SetDrawMode(0);
-      #endif
-    }
-  }
-  /* Switch LCD on */
-  LCD_On();
-  return r;
-}
+// defined by hardware/blcd.c
 
 /*********************************************************************
 *

@@ -186,7 +186,7 @@ void LCD_Display_Dir(u8 dir)
 //初始化lcd
 //该初始化函数可以初始化各种ILI93XX液晶,但是其他函数是基于ILI9320的!!!
 //在其他型号的驱动芯片上没有测试! 
-void LCD_Init(void)
+int LCD_Init(void)
 { 	
 	u16 i;									  
 	RCC->AHBENR|=1<<8;      //使能FSMC时钟	  
@@ -253,6 +253,7 @@ void LCD_Init(void)
 	LCD_EndXSet(799);			//x终点坐标为800
 	LCD_BackLightSet(63);		//背光设置为最亮
 	LCD_Clear(WHITE);			//清屏
+	return 0;
 }  
 //清屏函数
 //color:要清屏的填充色
