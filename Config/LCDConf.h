@@ -20,6 +20,11 @@ Purpose     : Sample configuration file
 #ifndef LCDCONF_H
 #define LCDCONF_H
 
+#include"lcd.h"
+#define LCD_CONTROLLER      -1
+
+#define LCD_INIT_CONTROLLER()  LCD_Init();;
+
 /*********************************************************************
 *
 *                   General configuration of LCD

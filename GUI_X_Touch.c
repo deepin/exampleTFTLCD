@@ -19,6 +19,10 @@ Purpose     : Config / System dependent externals for GUI
 
 #include "GUI.h"
 #include "GUI_X.h"
+#include"touch.h"
+// not sure, maybe reversed is true
+#define CODE_RDX 0X00
+#define CODE_RDY 0XFF					
 
 void GUI_TOUCH_X_ActivateX(void) {
 }
@@ -27,11 +31,11 @@ void GUI_TOUCH_X_ActivateY(void) {
 }
 
 int  GUI_TOUCH_X_MeasureX(void) {
-  return 0;
+  return TP_Read_XOY(CODE_RDX);
 }
 
 int  GUI_TOUCH_X_MeasureY(void) {
-  return 0;
+  return TP_Read_XOY(CODE_RDY);
 }
 
 	 	 			 		    	 				 	  			   	 	 	 	 	 	  	  	      	   		 	 	 		  		  	 		 	  	  			     			       	   	 			  		    	 	     	 				  	 					 	 			   	  	  			 				 		 	 	 			     			 

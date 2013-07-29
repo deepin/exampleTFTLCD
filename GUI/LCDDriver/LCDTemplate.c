@@ -384,6 +384,9 @@ static void  DrawBitLine16BPP(int x, int y, U16 const GUI_UNI_PTR * p, int xsize
 *   calling this routine make sure that the coordinates are in range, so
 *   that no check on the parameters needs to be performed.
 */
+
+#include"lcd.h"
+
 void LCD_L0_SetPixelIndex(int x, int y, int PixelIndex) {
   GUI_USE_PARA(x);
   GUI_USE_PARA(y);
@@ -398,7 +401,7 @@ void LCD_L0_SetPixelIndex(int x, int y, int PixelIndex) {
   #endif
   /* Write into hardware ... Adapt to your system */
   {
-    /* ... */
+    LCD_Fast_DrawPoint(xPhys, yPhys, PixelIndex);/* ... */
   }
 }
 
@@ -425,7 +428,7 @@ unsigned int LCD_L0_GetPixelIndex(int x, int y) {
   #endif
   /* Read from hardware ... Adapt to your system */
   {
-    PixelIndex = 0;/* ... */
+    PixelIndex = LCD_ReadPoint(xPhys, yPhys);/* ... */
   }
   return PixelIndex;
 }
