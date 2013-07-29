@@ -12,6 +12,7 @@ Group (MALLOC)
 Group (FATFS)
 Group (TEXT)
 Group (PICTURE)
+Group (SHAPES)
 
 File 1,2,<.\startup_stm32f10x_hd.s><startup_stm32f10x_hd.s>
 File 2,1,<.\test.c><test.c>

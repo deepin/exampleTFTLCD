@@ -540,16 +540,19 @@ int main(void)
 		switch(key)
 		{
 			case 1://KEY0按下,电容触摸测试
-				ctouch_paint_test();
+				LCD_Clear(WHITE);
+				LCD_DrawRectangle(60, 250, 400, 40);
 				break;
 			case 2://KEY1按下,图片显示测试
-				picture_display_test();
+				LCD_Clear(WHITE);
+				LCD_DrawRectangle(60, 250, 200, 40);
 				break;
 			case 4://WK_UP按下,液晶自测试
-				tftlcd_self_test();
+				LCD_Clear(WHITE);
+				LCD_DrawRectangle(160, 250, 400, 40);
 				break;	 
 		}
-		t++;
+		/*t++;
 		if(t==20)
 		{		 				   
 			t=0;
@@ -560,7 +563,7 @@ int main(void)
 				LCD_Fill(60,70,60+128,70+16,WHITE);
 		}else{
 			 delay_ms(10);
-		}
+		}*/
 	}   		    
 } 
 
