@@ -1,5 +1,7 @@
+#include"gt811.h"
 #include"myGui.h"
 #include"lcd.h"
+#include"touch.h"
 #include"stm32f10x_type.h"
 #include<string.h>
 
@@ -11,7 +13,16 @@
 rec theKeyBoard[KeyBoardNum];
 rec theList[ListItemNum];
 
-
+u16 str2int(char *str)
+{
+	u16 res = 0;
+	while(*str){
+		res *= 10;
+		res += *str - '0';
+		++str;	 	
+	}
+	return res;
+}
 void itoa(char *str, u8 num)
 {
 	char *head = str;
@@ -35,8 +46,8 @@ void drawButton(u16 x1, u16 y1, u16 x2, u16 y2, char *title)
 	u16 titleWidth;
 
 
-	u16 hight = y2 - y1;
-	u16 width = x2 - x1;
+	short hight = y2 - y1;
+	short width = x2 - x1;
 	if(hight < 0){
 	 	hight = -hight;
 	}
@@ -63,8 +74,8 @@ void drawButtonArray(u16 xnum, u16 ynum, u16 x1, u16 y1, u16 x2, u16 y2, float g
 	char tmp[10];
 	u8 xgap, ygap;
 	u16 xcur, ycur, xlen, ylen;
- 	u16 hight = y2 - y1;
-	u16 width = x2 - x1;
+ 	short hight = y2 - y1;
+	short width = x2 - x1;
 	if(hight < 0){
 	 	hight = -hight;
 	}
@@ -99,8 +110,8 @@ void drawKeyBoard(u16 x1, u16 y1, u16 x2, u16 y2)
 	char tmp[10];
 	u8 xgap, ygap;
 	u16 xcur, ycur, xlen, ylen;
- 	u16 hight = y2 - y1;
-	u16 width = x2 - x1;
+ 	short hight = y2 - y1;
+	short width = x2 - x1;
 	if(hight < 0){
 	 	hight = -hight;
 	}
@@ -132,6 +143,16 @@ void drawKeyBoard(u16 x1, u16 y1, u16 x2, u16 y2)
 			}
 			else if(k > 7 && k < 11){
 			 	itoa(tmp, k++ - 7);
+			}
+			else if( k == 3){
+			 	++k;
+				strcpy(tmp, "<-");
+
+			}
+			else if( k == 7){
+			 	++k;
+				strcpy(tmp, "clr");
+
 			}
 			else if(k == 12){
 				++k;
@@ -179,8 +200,8 @@ void drawList(u16 x1, u16 y1, u16 x2, u16 y2)
 	char tmp[20] = "Mode 1: blabla~";
 	u8 xgap, ygap;
 	u16 xcur, ycur, xlen, ylen;
- 	u16 hight = y2 - y1;
-	u16 width = x2 - x1;
+ 	short hight = y2 - y1;
+	short width = x2 - x1;
 	if(hight < 0){
 	 	hight = -hight;
 	}
@@ -214,3 +235,149 @@ void drawList(u16 x1, u16 y1, u16 x2, u16 y2)
 	}	
 }
 
+u8 pointInRec(u16 x, u16 y, rec *theRec)
+{
+ 	return (x > theRec ->mx1) && (x < theRec ->mx2) && (y > theRec ->my1) && (y < theRec ->my2);
+}
+#include"delay.h"
+#define KeyBoardBuf 20
+u8 readKeyBoard(u16 *typedNum)
+{
+	u16 t = 0;
+	u8 i = 0;
+	u16 xcur, ycur;
+	char tmp[KeyBoardBuf], *pbuf = tmp, *beg = tmp;
+	while(1){
+		//delay_ms(200);
+		ctp_dev.scan();
+		if(!ctp_dev.tpsta&0X1F){
+			delay_ms(20);
+			++t;
+			if(t == 1000){
+			 	LCD_BackLightSet(1);
+				t = 0;
+			}
+			continue;
+		}
+		xcur = ctp_dev.x[0];
+		ycur = ctp_dev.y[0];
+		i = 0;
+		while(!pointInRec(xcur, ycur, &theKeyBoard[i])){
+		 	++i;
+			if(i == KeyBoardNum){
+		 		break;
+			}
+		}
+		switch(i){
+		 	case 0:
+				*pbuf++ = '0' + 7;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 1:
+				*pbuf++ = '0' + 8;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 2:
+				*pbuf++ = '0' + 9;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 3:
+				--pbuf;
+				break;
+			case 4:
+				*pbuf++ = '0' + 4;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 5:
+				*pbuf++ = '0' + 5;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 6:
+				*pbuf++ = '0' + 6;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 7:
+				pbuf = tmp;
+				break;
+			case 8:
+				*pbuf++ = '0' + 1;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 9:
+				*pbuf++ = '0' + 2;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 10:
+				*pbuf++ = '0' + 3;
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = atoi(tmp);
+					return 1;
+				}
+				break;
+			case 11:
+				break;
+			case 12:
+				*pbuf++ = '.';
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = str2int(tmp);
+					return 1;
+				}
+				break;
+			case 13:
+				*pbuf++ = '0';
+				if(pbuf - tmp == KeyBoardBuf - 1){
+					*pbuf = 0;
+				 	*typedNum = str2int(tmp);
+					return 1;
+				}
+				break;
+			case 14:
+				return 0;
+			case 15:
+				*pbuf = 0;
+				*typedNum = str2int(tmp);
+				return 1;
+
+		}
+
+		ctp_dev.scan();
+		while(ctp_dev.tpsta&0X1F){
+			ctp_dev.scan();	
+		}
+	}		 	
+	
+}

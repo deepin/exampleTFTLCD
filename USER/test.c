@@ -494,8 +494,9 @@ u8 flag[3] = {0,0,0};
 u8 touchIndex = 0;
 int main(void)
 {		
+	u16 numFromKeyBoard;
 	u8 key;
-	u8 t=0;
+	u16 t=0;
    	Stm32_Clock_Init(9);//系统时钟设置
 	delay_init(72);		//延时初始化
 	uart_init(72,9600); //串口1初始化  	  
@@ -567,6 +568,13 @@ int main(void)
 				LCD_Clear(WHITE);
 				drawKeyBoard(460, 60, 660, 360);//drawButtonArray(4, 3, 60, 60, 460, 360, 0);//LCD_DrawRectangle(160, 250, 400, 40);
 				drawList(200, 60, 400, 360);
+				if(readKeyBoard(&numFromKeyBoard)){
+					LCD_ShowString(400, 20, 200, 16, 16, "you type sth");
+				 	LCD_ShowxNum(400, 40, numFromKeyBoard, 6, 16, 0);
+				}
+				else{
+					LCD_ShowString(400, 40, 200, 16, 16, "you type nil");
+				}
 				flag[2] = 1; flag[0] = 0;flag[1] = 0;
 				break;	 
 		}
@@ -574,8 +582,14 @@ int main(void)
 		ctp_dev.scan();
 		if(!ctp_dev.tpsta&0X1F){
 			delay_ms(20);
+			++t;
+			if(t == 1000){
+			 	//LCD_BackLightSet(1);
+				t = 0;
+			}
 			continue;
 		}
+		LCD_BackLightSet(50);
 		while(!ctp_dev.tpsta &(0x01 << touchIndex))touchIndex++;
 		xcur = ctp_dev.x[touchIndex];
 		ycur = ctp_dev.y[touchIndex];
@@ -604,8 +618,8 @@ int main(void)
 			 LCD_ShowString(460, 40, 200, 16, 16, "you got it");
 			}
 			else{
-				LCD_ShowString(460, 40, 200, 16, 16, "you missed it");
-				testKeyBoard();
+				;//LCD_ShowString(460, 40, 200, 16, 16, "you missed it");
+				//testKeyBoard();
 			}
 		}
 

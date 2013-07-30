@@ -17,4 +17,5 @@ void drawButtonArray(u16 xnum, u16 ynum, u16 x1, u16 y1, u16 x2, u16 y2, float g
 void drawKeyBoard(u16 x1, u16 y1, u16 x2, u16 y2);
 void drawList(u16 x1, u16 y1, u16 x2, u16 y2);
 void testKeyBoard(void);
+u8 readKeyBoard(u16 *);
 #endif
