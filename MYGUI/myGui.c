@@ -2,15 +2,16 @@
 #include"lcd.h"
 #include"stm32f10x_type.h"
 #include<string.h>
-/*typedef struct{
-	u16 mx1;
-	u16 my1;
-	u16 mx2;
-	u16 my2;
-	char *mtitle;
-	void (*mdraw) (u16 x1, u16 y1, u16 x2, u16 y2, char *title);
-}Button;
-*/
+
+#define KeyBoardDimX 4
+#define KeyBoardDimY 4
+#define KeyBoardNum (KeyBoardDimX * KeyBoardDimY)
+#define ListItemNum 3
+
+rec theKeyBoard[KeyBoardNum];
+rec theList[ListItemNum];
+
+
 void itoa(char *str, u8 num)
 {
 	char *head = str;
@@ -89,5 +90,127 @@ void drawButtonArray(u16 xnum, u16 ynum, u16 x1, u16 y1, u16 x2, u16 y2, float g
 		}
 	}
 
+}
+
+void drawKeyBoard(u16 x1, u16 y1, u16 x2, u16 y2)
+{
+
+ 	u8 i, j, k = 0;
+	char tmp[10];
+	u8 xgap, ygap;
+	u16 xcur, ycur, xlen, ylen;
+ 	u16 hight = y2 - y1;
+	u16 width = x2 - x1;
+	if(hight < 0){
+	 	hight = -hight;
+	}
+	if(width < 0){
+	 	width = -width;
+	}	
+	xgap = width * defaultGapRatio;
+	ygap = hight * defaultGapRatio;	 
+
+	xlen = (width - xgap) / KeyBoardDimX - xgap;
+	ylen = (hight - ygap) / KeyBoardDimY - ygap;
+	xcur = x1 + xgap;
+	ycur = y1 - ylen;
+		 
+	for(i = 0; i < KeyBoardDimY; ++i){
+		xcur = x1 + xgap;
+		ycur += ylen + ygap;
+		for(j = 0; j < KeyBoardDimX; ++j){
+			theKeyBoard[k].mx1 = xcur;
+			theKeyBoard[k].my1 = ycur;
+			theKeyBoard[k].mx2 = xcur + xlen;
+			theKeyBoard[k].my2 = ycur + ylen;
+
+			if(k < 3){//itoa(tmp,k++);
+				itoa(tmp, 7 + k++);
+			}
+			else if(k > 3 && k < 7){
+			 	itoa(tmp, k++);
+			}
+			else if(k > 7 && k < 11){
+			 	itoa(tmp, k++ - 7);
+			}
+			else if(k == 12){
+				++k;
+			 	strcpy(tmp, ".");
+			}
+			else if(k == 13)
+			{
+				++k;
+			 	tmp[0] = '0';
+				tmp[1] = 0;
+			}
+			else if(k == 14){
+				++k;
+			 	strcpy(tmp, "cancel");
+			}
+			else if(k == 15)
+			{
+				++k;
+			 	strcpy(tmp, "ok");
+			}
+			else{
+				++k;
+			 	tmp[0] = '\0';
+			}
+
+		 	drawButton(xcur, ycur, xcur + xlen, ycur + ylen, tmp);
+
+			xcur += xlen + xgap;
+		}
+	}	
+
+}
+void testKeyBoard(void)
+{
+	u8 i=0;
+	while(i < KeyBoardNum){
+	 	LCD_Fill(theKeyBoard[i].mx1, theKeyBoard[i].my1, theKeyBoard[i].mx2, theKeyBoard[i].my2, YELLOW); 
+		++i;
+	}
+}
+void drawList(u16 x1, u16 y1, u16 x2, u16 y2)
+{
+	u8 NumX = 1, NumY = ListItemNum;
+	u8 i, j, k = 0;
+	char tmp[20] = "Mode 1: blabla~";
+	u8 xgap, ygap;
+	u16 xcur, ycur, xlen, ylen;
+ 	u16 hight = y2 - y1;
+	u16 width = x2 - x1;
+	if(hight < 0){
+	 	hight = -hight;
+	}
+	if(width < 0){
+	 	width = -width;
+	}	
+	xgap = width * defaultGapRatio;
+	ygap = hight * defaultGapRatio;	 
+
+	xlen = (width - xgap) / NumX - xgap;
+	ylen = (hight - ygap) / NumY - ygap;
+	xcur = x1 + xgap;
+	ycur = y1 - ylen;
+		 
+	for(i = 0; i < NumY; ++i){
+		xcur = x1 + xgap;
+		ycur += ylen + ygap;
+		for(j = 0; j < NumX; ++j){
+			theList[k].mx1 = xcur;
+			theList[k].my1 = ycur;
+			theList[k].mx2 = xcur + xlen;
+			theList[k].my2 = ycur + ylen;
+
+			++k;
+			tmp[5] = '0' + k;
+
+		 	drawButton(xcur, ycur, xcur + xlen, ycur + ylen, tmp);
+
+			xcur += xlen + xgap;
+		}
+	}	
 }
 

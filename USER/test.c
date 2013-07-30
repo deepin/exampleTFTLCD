@@ -565,7 +565,8 @@ int main(void)
 			case 4://WK_UP°´ÏÂ,Òº¾§×Ô²âÊÔ
 				if(flag[2])break;
 				LCD_Clear(WHITE);
-				drawButtonArray(4, 3, 60, 60, 460, 360, 0);//LCD_DrawRectangle(160, 250, 400, 40);
+				drawKeyBoard(460, 60, 660, 360);//drawButtonArray(4, 3, 60, 60, 460, 360, 0);//LCD_DrawRectangle(160, 250, 400, 40);
+				drawList(200, 60, 400, 360);
 				flag[2] = 1; flag[0] = 0;flag[1] = 0;
 				break;	 
 		}
@@ -604,8 +605,16 @@ int main(void)
 			}
 			else{
 				LCD_ShowString(460, 40, 200, 16, 16, "you missed it");
+				testKeyBoard();
 			}
 		}
+
+		//
+
+
+	}   		    
+} 
+
 
 		/*t++;
 		if(t==20)
@@ -619,9 +628,6 @@ int main(void)
 		}else{
 			 delay_ms(10);
 		}*/
-	}   		    
-} 
-
 
 
 
