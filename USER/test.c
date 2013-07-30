@@ -488,7 +488,10 @@ void tftlcd_self_test(void)
 		tftlcd_backlight_test();
 	}
 }
-			 
+#include"myGui.h"
+u16 xcur = -1, ycur = -1;
+u8 flag[3] = {0,0,0};
+u8 touchIndex = 0;
 int main(void)
 {		
 	u8 key;
@@ -534,24 +537,76 @@ int main(void)
 	Show_Str(60,210,lcddev.width,16,"开源电子网论坛：www.openedv.com",16,0);				    	 
 	Show_Str(60,230,lcddev.width,16,"电话(传真)：020-38271790",16,0);				    	 
 	Show_Str(60,250,lcddev.width,16,"2013年3月18日",16,0);
+	
+	while(ctp_dev.init())		   	//初始化电容触摸屏
+	{
+		Show_Str(60,110,lcddev.width,16,"电容触摸屏初始化失败！",16,0); 
+		delay_ms(200);
+		Show_Str(60,110,lcddev.width,16,"      请检查！！！    ",16,0); 
+ 		delay_ms(200);
+	};
 	while(1)
 	{
 		key=KEY_Scan(0);
 		switch(key)
 		{
 			case 1://KEY0按下,电容触摸测试
+				if(flag[0])break;
 				LCD_Clear(WHITE);
 				LCD_DrawRectangle(60, 250, 400, 40);
+				flag[0] = 1;flag[1] = 0;flag[2] = 0;
 				break;
 			case 2://KEY1按下,图片显示测试
+				if(flag[1])break;
 				LCD_Clear(WHITE);
 				LCD_DrawRectangle(60, 250, 200, 40);
+				flag[1] = 1;flag[0] = 0;flag[2] = 0;
 				break;
 			case 4://WK_UP按下,液晶自测试
+				if(flag[2])break;
 				LCD_Clear(WHITE);
 				LCD_DrawRectangle(160, 250, 400, 40);
+				flag[2] = 1; flag[0] = 0;flag[1] = 0;
 				break;	 
 		}
+		//TP_Read_XY2(&xcur, &ycur);
+		ctp_dev.scan();
+		if(!ctp_dev.tpsta&0X1F){
+			delay_ms(20);
+			continue;
+		}
+		while(!ctp_dev.tpsta &(0x01 << touchIndex))touchIndex++;
+		xcur = ctp_dev.x[touchIndex];
+		ycur = ctp_dev.y[touchIndex];
+		
+		if(flag[0]){
+			if(xcur > 60 && xcur < 400 && ycur > 40 && ycur < 250){
+			 LCD_ShowString(460, 40, 200, 16, 16, "you got it");
+			 
+			}
+			else{
+				LCD_ShowString(460, 40, 200, 16, 16, "you missed it");
+			}
+		}
+		else if(flag[1]){
+			if(xcur > 60 && xcur < 200 && ycur > 40 && ycur < 250){
+			 LCD_ShowString(260, 40, 200, 16, 16, "you got it");
+			 Draw_Circle(300, 100, 30);
+			 drawButton(240, 260, 400, 360, 0);
+			}
+			else{
+				LCD_ShowString(260, 40, 200, 16, 16, "you missed it");
+			}
+		}
+		else if(flag[2]){
+			if(xcur > 160 && xcur < 400 && ycur > 40 && ycur < 250){
+			 LCD_ShowString(460, 40, 200, 16, 16, "you got it");
+			}
+			else{
+				LCD_ShowString(460, 40, 200, 16, 16, "you missed it");
+			}
+		}
+
 		/*t++;
 		if(t==20)
 		{		 				   
