@@ -565,7 +565,7 @@ int main(void)
 			case 4://WK_UP°´ÏÂ,Òº¾§×Ô²âÊÔ
 				if(flag[2])break;
 				LCD_Clear(WHITE);
-				LCD_DrawRectangle(160, 250, 400, 40);
+				drawButtonArray(4, 3, 60, 60, 460, 360, 0);//LCD_DrawRectangle(160, 250, 400, 40);
 				flag[2] = 1; flag[0] = 0;flag[1] = 0;
 				break;	 
 		}
@@ -592,7 +592,7 @@ int main(void)
 			if(xcur > 60 && xcur < 200 && ycur > 40 && ycur < 250){
 			 LCD_ShowString(260, 40, 200, 16, 16, "you got it");
 			 Draw_Circle(300, 100, 30);
-			 drawButton(240, 260, 400, 360, 0);
+			 drawButton(240, 260, 400, 360, "");
 			}
 			else{
 				LCD_ShowString(260, 40, 200, 16, 16, "you missed it");
